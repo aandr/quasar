@@ -25,6 +25,10 @@ export default {
       default: 'bottom left',
       validator: positionValidator
     },
+    autoClose: {
+        type: Boolean,
+        default: true
+    },
     self: {
       type: String,
       default: 'top left',
@@ -118,8 +122,10 @@ export default {
       this.reposition(evt)
       this.timer = setTimeout(() => {
         this.timer = null
-        document.body.addEventListener('click', this.close, true)
-        document.body.addEventListener('touchstart', this.close, true)
+        if (this.autoClose) {
+          document.body.addEventListener('click', this.close, true)
+          document.body.addEventListener('touchstart', this.close, true)
+        }
         this.$emit('open')
       }, 1)
     },
@@ -129,8 +135,10 @@ export default {
       }
 
       clearTimeout(this.timer)
-      document.body.removeEventListener('click', this.close, true)
-      document.body.removeEventListener('touchstart', this.close, true)
+      if (this.autoClose) {
+        document.body.removeEventListener('click', this.close, true)
+        document.body.removeEventListener('touchstart', this.close, true)
+      }
       this.scrollTarget.removeEventListener('scroll', this.__updatePosition)
       window.removeEventListener('resize', this.__updatePosition)
       EscapeKey.pop()
